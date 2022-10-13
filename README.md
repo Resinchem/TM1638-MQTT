@@ -8,7 +8,7 @@ In addition to providing MQTT wrapper functions, the framework also provides the
 * Over-the-air (OTA) update capabilities (after initial load)
 * Clock and date modes, plus other examples included in the code
 
-While designed primarily for use with Home Assistant, it should function with any MQTT broker or application.  For information on wiring and more, please see the following:
+While designed primarily for use with Home Assistant as an alternative to ESPHome, it should function with any MQTT broker or application.  For information on wiring and more, please see the following:
 
 * YouTube: [TM1638 with ESPHome and MQTT for Home Assistant]()
 * Written Blog: [TM1638 7-Segment Display with ESPHome](https://resinchemtech.blogspot.com/2022/10/tm1638.html)
