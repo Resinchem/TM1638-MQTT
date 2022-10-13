@@ -4,7 +4,7 @@
 
 This folder contains the .stl files to 3D print an enclosure for the TM1638.  But before you download and print this enclosure, **please carefully note the following:**
 
-*Different manufacturers/sellers have slightly different dimensions, particularly in terms of mounting holes and LED spacing*  This enclosure was designed specifically for the TM1638 board purchased from this seller: [AITRIP 4PCS 8-Bit LED Digital Tube 8 Keys TM1638 Display Module](https://amzn.to/3EqqTIp)
+_**Different manufacturers/sellers have slightly different dimensions, particularly in terms of mounting holes and LED spacing**_.  This enclosure was designed specifically for the TM1638 board purchased from this seller: [AITRIP 4PCS 8-Bit LED Digital Tube 8 Keys TM1638 Display Module](https://amzn.to/3EqqTIp)
 
 If you purchase a different board, or from a different seller, it may be necessary to slightly modify the .stl files.
 
@@ -17,3 +17,5 @@ The design is made for a Wemos D1 Mini with all wiring made through-hole in both
 The design is built to use M2 x 10 or M2 x 12 bolts.  Enough space has been left between the back of the TM1638 and the mounting posts so that nuts can be added to keep the TM1638 display flush against the front panel.
 
 I just used PLA filament.  Supports (touching buildplate) are needed for the bottom enclosure.  If you print the top plate with the back side down (as shown in top photo), then supports are needed for the top as well.  If you print the top front side down, supports are probably not needed.
+
+![Enclosure_Final](https://user-images.githubusercontent.com/55962781/195655018-1a0fa491-3840-4f5a-a0d5-31952fa092d2.jpg)
