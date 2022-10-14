@@ -53,3 +53,15 @@
       data:
         topic: "cmnd/tm1638/setled"
         payload: "00"   #special payload that will turn all 8 LEDs off
+
+
+# This example, uses /setleds instead of /setled (note the addition of the "s" in the topic) to turn on a set of LEDs in one command
+# instead of publishing multiple /setled messages.
+- alias: My Automation
+  trigger:
+     # some trigger event...
+  action:
+    - service.mqtt_publish
+      data:
+        topic: "cmnd/tm1638/setleds"
+        payload: "00110010"  #This would turn on LEDs 3, 4 and 7.  All other LEDs would be turned off.
