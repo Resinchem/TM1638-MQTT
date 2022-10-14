@@ -2,8 +2,8 @@
 /* 
    ===================================================================================================================== 
    TM1638 MQTT for ESP8266
-   Version: 0.5 (WIP)
-   Last Updated: 10/13/2022
+   Version: 0.51 (WIP)
+   Last Updated: 10/14/2022
    NOTICE:  The project is released under the GNU Public License v3.0 and as such, it is provided "as-is" without warrantly or guarantee.  
    Use as entirely at your own risk and the developer assumes no liability or responsibility for damage or injury as a result of use of this code.
    =====================================================================================================================  
@@ -276,6 +276,8 @@ void callback(char* topic, byte* payload, unsigned int length) {
       pos = pos - 1;
       tm.setLED(pos, state); 
     }
+  } else if (strcmp(topic, MQTT_TOPIC_SUB"/setleds") == 0) {
+    setAllLeds(message);
   } else if (strcmp(topic, MQTT_TOPIC_SUB"/brightness") == 0) {
     byte newBrightness = message.toInt();
     if (newBrightness > 7) {
@@ -585,6 +587,17 @@ void blinkLights( byte prevLights) {
 // =================================
 //  MQTT PUBLISH/UPDATE ROUTINES
 // =================================
+void setAllLeds(String lights) {
+  //Process each char of string and set each LED on/off accordingly
+  char buf[10];
+  lights.toCharArray(buf, 9);
+  
+  for (int i = 0; i < 8; i++) {
+    byte ledState = buf[i];
+    tm.setLED(i, ledState);
+  }
+}
+
 void updateMQTTButtonState(uint8_t buttons) {
   char outMsg[9];
   sprintf(outMsg, "%1u", buttons);
