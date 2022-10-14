@@ -6,6 +6,6 @@ This folder contains the primary files for the TM1638-MQTT application.  All thr
 * Settings.h - contains other settings and options, including MQTT topics to use
 * tm1638_mqtt.ino - primary application file
 
-Other supporting libraries, such as the TM1638Plus and PubSubClient libraries, may also need to be installed in your environment along with support for the ESP8266 boards.  Please see the wiki for full details on installation, setup and other requirements.
+Other supporting libraries, such as the TM1638Plus and PubSubClient libraries, may also need to be installed in your environment along with support for the ESP8266 boards.  **Please see the wiki for full details on installation, setup and other requirements**.
 
 This application is still a very-early work-in-progress.
