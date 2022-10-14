@@ -1,0 +1,55 @@
+# This file contains sample automations for controlling the LEDs on the TM1638
+# These are only snippets of code and are not complete (e.g automations need to appear under automation:, etc.) 
+# These could also be created via the UI.
+
+# This example turns on an LED based on the state of a light entity.  This might be used, for example,
+# to monitor up to eight different lights throughout the house and see which lights are off or on.
+# For this example, turning on/off the family room lamp will toggle the 4th LED off/on on the TM1638
+- alias: Family Room Lamp on
+  trigger:
+    platform: state
+    entity_id: light.family_room
+    from: 'off'
+    to: 'on'
+  action:
+    - service: mqtt.publish
+      data:
+        topic: "cmnd/tm1638/setled"
+        payload: "41"   #turn LED #4 on (1) - all other LEDs remain in their current state 
+
+- alias: Family Room Lamp Off
+  trigger:
+    platform: state
+    entity_id: light.family_room
+    from: 'on'
+    to: 'off'
+  action:
+    - service: mqtt.publish
+      data:
+        topic: "cmnd/tm1638/setled"
+        payload: "40"   #turn LED #4 off (0) - all other LEDs remain in their current state
+
+
+# This example uses the special payloads of "99" and "OO" to set the state of all eight LEDs
+# based on the status of the alarm control panel
+- alias: Alarm Armed
+  trigger:
+    platform: state
+    entity_id: alarm_control_panel.home_alarm
+    to: 'armed_home'
+  action:
+    - service.mqtt_publish
+      data:
+        topic: "cmnd/tm1638/setled"
+        payload: "99"   #special payload that will turn all 8 lEDs on
+
+- alias: Alarm Disarmed
+  trigger:
+    platform: state
+    entity_id: alarm_control_panel.home_alarm
+    to: 'disarmed'
+  action:
+    - service.mqtt_publish
+      data:
+        topic: "cmnd/tm1638/setled"
+        payload: "00"   #special payload that will turn all 8 LEDs off

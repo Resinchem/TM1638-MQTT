@@ -1,0 +1,62 @@
+# This file contains sample automations for outputting example sensor values to the TM1638
+# These are only snippets of code and are not complete (e.g automations need to appear under automation:, etc.) 
+# These could also be created via the UI.
+
+# This automation will publish the sensor temperature to the TM1638 with the letter F
+# The display will update any time the temperature sensor value changes
+# display example: 72.1 F
+- alias: Display Temp
+  trigger:
+    platform: state
+    entity_id: sensor.mytemp
+  action:
+    - service: mqtt.publish
+      data:
+        topic: "cmnd/tm1638/displaytext"
+        payload: "{{ states('sensor.mytemp') }} F"
+
+
+# This automation will publish a temperature and humidity from two different sensors
+# Due to 8 char limit, only the integer values will be published. A F will be added to temp and h to humidity
+# The display will update any time either sensor's value changes
+# display example: 72 F 48h
+- alias: Display Temp and Humidity
+  trigger:
+    - platform: state
+      entity_id: 
+        - sensor.mytemp
+        - sensor.myhumidity
+  action:
+    - service: mqtt.publish
+      data:
+        topic: "cmnd/tm1638/displaytext"
+        payload: "{{ states('sensor.mytemp')|int(0) }} F {{ states('sensor.myhumidity')|int(0) }}h"
+
+
+# This automation will update a single character of a display based on whether a door is open or closed
+# All other displayed characters will be unchanged.  For the example, assume we are tracking eight doors
+# When all doors are closed, the display shows: 'nnnnnnnn'.  When doors 2 and 5 are open, the display shows: 'nYnnYnnn'
+# These two automations will be for door #4 opening and closing
+- alias: Door 4 open
+  trigger:
+    platform: state
+    entity_id: binary_sensor.door4
+    from: 'off'
+    to: 'on'
+  action: 
+    - service: mqtt.publish
+      data:
+        topic: "cmnd/tm1638/displaychar"
+        payload: "4,Y"   # only changes the 4th character position... all other characters are unchanged
+
+- alias: Door 4 close
+  trigger:
+    platform: state
+    entity_id: binary_sensor.door4
+    from: 'on'
+    to: 'off'
+  action: 
+    - serivce: mqtt.publish
+      data:
+        topic: "cmnd/tm1638/displaychar"
+        payload: "4,n"  # only changes the 4th character position... all other characters are unchanged

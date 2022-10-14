@@ -1,0 +1,43 @@
+# These automations show examples of how to publish time and date from Home Assistant 
+# for the TM1638 to display current time and/or date
+# These are only snippets of code and are not complete (e.g automations need to appear under automation:, etc.) 
+# These could also be created via the UI.
+
+# Published Home Assistant Time to MQTT
+# This will update once per minute at the top of the minute, based on your HA timezone
+# Time is published in 24-hour format, but TM1638 will convert this to 12-hour time with a decimal
+# separator between hours and minutes and an A or P for am/pm.  
+# The TM1638 display mode should be set to 1 (the default mode for time display)
+# The TM1638 will update the displayed time each time the HA time changes/is published
+
+# Example display: 10.36 A
+- alias: TM1638 Time
+  trigger:
+    platform: state
+    entity_id: sensor.time
+  action:
+    - service: mqtt.publish
+      data:
+        topic: "stat/tm1638/hatime"
+        payload: "{{ states('sensor.time') }}"
+
+# Publish Home Assistant Date to MQTT
+# This will update once per day at midnight, based on your HA timezone
+# Date is published in yyyy-mm-dd format, but TM1638 will convert this to 3 char month and one or two digit day
+# The TM1638 display mode should be set to 2 (the default mode for date display)
+# The retain flag is set to true for this value since it only updates once a day.  Otherwise, the TM1638 would have to
+# wait until midnight to have a value to display after it boots up.  The TM1638 will update each time the date changes.
+
+# Example display: OCT 28
+
+- alias: TM1638 Date
+  id: 460fc310-e882-4eeb-917e-f479e2536a6c
+  trigger:
+    platform: state
+    entity_id: sensor.date
+  action:
+    - service: mqtt.publish
+      data:
+        topic: "stat/tm1638/hadate"
+        payload: "{{ states('sensor.date') }}"
+        retain: true

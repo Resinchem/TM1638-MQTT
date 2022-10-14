@@ -1,0 +1,45 @@
+# These automation examples show how to process button presses on the TM1638
+# These are only snippets of code and are not complete (e.g automations need to appear under automation:, etc.) 
+# These could also be created via the UI.
+# IMPORTANT:
+# The button press value(s) returned via MQTT are the decimal values of the byte containing which buttons are pressed.
+# The decimal values returned for the individual buttons therefore are:
+#   Button 1 (S1):   1  (0000 0001)
+#   Button 2 (S2):   2  (0000 0010)
+#   Button 3 (S3):   4  (0000 0100)
+#   Button 4 (S4):   8  (0000 1000)
+#   Button 5 (S5):  16  (0001 0000)
+#   Button 6 (S6):  32  (0010 0000)
+#   Button 7 (S7):  64  (0100 0000)
+#   Button 8 (S8): 128  (1000 0000)
+#
+# This also allows you to use multiple button presses by combining the bits.  For example, if buttons 4 and 6
+# are both pressed (0010 1000), a decimal value of 40 (32+8) will be published to MQTT
+
+
+# Example: Toggle the state of the family room lamp when button 4 is pressed on the TM1638
+# (You could combine this with the LED example in the use_leds.yaml to also show the state of the lamp via LED 4)
+- alias: Lamp on with Button 4
+  trigger:
+    platform: mqtt
+    topic: "stat/mqtt/buttons"
+    payload: "8"   # button 4 returns a payload value of 8 - see above
+  action:
+    - service: light.toggle
+      target:
+        entity_id: lamp.family_room
+
+
+# Example: Use multi-button press to launch another Home Assistant automation.  For this example, pressing 
+# buttons 6 and 8 simultaneously will launch the 'movie night' automation (which is already defined in Home Assistant)
+- alias: TM1638 Launch Movie Night 
+  trigger: 
+    platform: mqtt
+    topic: "stat/mqtt/buttons"
+    payload: "160"    # this is the combined value of buttons 6 and 8 (32 + 128)
+  action:
+    - service: automation.trigger
+      data:
+        entity_id: automation.movie_night
+        skip_condition: true   #will skip any conditions in 'movie_night' and just run actions.  Set to false to eval conditions
+  
