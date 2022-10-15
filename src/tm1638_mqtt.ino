@@ -2,8 +2,8 @@
 /* 
    ===================================================================================================================== 
    TM1638 MQTT for ESP8266
-   Version: 0.51 (WIP)
-   Last Updated: 10/14/2022
+   Version: 0.52 
+   Last Updated: 10/15/2022
    NOTICE:  The project is released under the GNU Public License v3.0 and as such, it is provided "as-is" without warrantly or guarantee.  
    Use as entirely at your own risk and the developer assumes no liability or responsibility for damage or injury as a result of use of this code.
    =====================================================================================================================  
@@ -68,7 +68,7 @@ byte oldMode = 0;
 short curBrightness = 0;
 bool blinkLEDs = false;
 bool ledsOn = false;
-byte prevLEDs = 0;
+uint16_t prevLEDs = 0;
 uint8_t prevButtons = 0; 
 String haTime;        //This global would hold a time value in 24-hour format (e.g. 14:23) passed in via MQTT that can be converted to display AM/PM time via the showTime function
 String haDate;        //This global would hold a date value in yyyy-mm-dd format that can be shown as month day via the showDate function
@@ -278,6 +278,15 @@ void callback(char* topic, byte* payload, unsigned int length) {
     }
   } else if (strcmp(topic, MQTT_TOPIC_SUB"/setleds") == 0) {
     setAllLeds(message);
+  } else if (strcmp(topic, MQTT_TOPIC_SUB"/blinkleds") == 0) {
+    if (message == "00000000") {
+      //turn off LEDs and stop blinking
+      stopBlinking();
+    } else {
+      setPrevLightsHex(message);
+      blinkLEDs = true;
+      ledsOn = true;
+    }
   } else if (strcmp(topic, MQTT_TOPIC_SUB"/brightness") == 0) {
     byte newBrightness = message.toInt();
     if (newBrightness > 7) {
@@ -407,6 +416,8 @@ void loop() {
     }
     tm.brightness(curBrightness);
     updateMQTTBrightness();
+  } else if (buttons == 4) {
+      stopBlinking();
   }
 
   // ====================================
@@ -446,6 +457,12 @@ void loop() {
       break;
     case 5:
 */  
+  }
+
+  //Blink LEDs - if enabled
+  if ((blinkLEDs) && (currentMillis - blinkPrevTime >= blinkInterval)) {
+    blinkPrevTime = currentMillis;
+    blinkLights();
   }
 }
 
@@ -568,22 +585,47 @@ void showDate() {
   tm.displayText(outDate.c_str());
 }
 
-void blinkLights( byte prevLights) {
+void setPrevLightsHex ( String prevLightsString) {
+  String leftPart = prevLightsString.substring(0,4);
+  String rightPart = prevLightsString.substring(4);
+  uint16_t leftDecimal = 0;
+  uint16_t rightDecimal = 0;
+  uint16_t fullDecimal = 0;
+  //Get decimal equilavent of each 4-char segment (using example string of '11010011' - led lights 1, 2, 4, 7 and 8 lit)
+  //Example: '1101' will result in leftDecimal = 13
+  leftDecimal = leftDecimal + ((leftPart.substring(0, 1).toInt()));
+  leftDecimal = leftDecimal + ((leftPart.substring(1, 2).toInt()) * 2);
+  leftDecimal = leftDecimal + ((leftPart.substring(2, 3).toInt()) * 4);
+  leftDecimal = leftDecimal + ((leftPart.substring(3).toInt()) * 8); 
+  //Example: '0011' will result in rightDecimal = 3
+  rightDecimal = rightDecimal + ((rightPart.substring(0, 1).toInt()));
+  rightDecimal = rightDecimal + ((rightPart.substring(1, 2).toInt()) * 2);
+  rightDecimal = rightDecimal + ((rightPart.substring(2, 3).toInt()) * 4);
+  rightDecimal = rightDecimal + ((rightPart.substring(3).toInt())* 8); 
+  //Now get decimal value to convert this to a HEX byte where the last two digits are always 0 (last two digits represent green/red on other models in TM1638Plus library)
+  //fullDecimal = (leftDecimal * 4096) + (rightDecimal * 256); // 54016 for the example
+  fullDecimal = (leftDecimal * 256) + (rightDecimal * 4096); 
+  //now store value in global
+  prevLEDs = (fullDecimal); 
+}
+
+void blinkLights() {
   if (ledsOn) {
     tm.setLEDs(0x0000);
   } else {
-    //tm.setLEDs(3);
-    //tm.setLEDs(0xFF00);
-    if (prevLights == 1) {
-      tm.setLEDs(0x0300);
-    } else if (prevLights == 2) {
-      tm.setLEDs(0x1800);
-    } else if (prevLights == 3) {
-      tm.setLEDs(0xC000);
-    }
+    tm.setLEDs(prevLEDs);
   }
   ledsOn = !ledsOn;
 }
+
+void stopBlinking() {
+  //Stops blinking lights and resets vars
+  blinkLEDs = false;
+  ledsOn = false;
+  prevLEDs = 0;
+  tm.setLEDs(0x0000);
+}
+
 // =================================
 //  MQTT PUBLISH/UPDATE ROUTINES
 // =================================

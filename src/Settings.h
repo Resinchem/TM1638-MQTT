@@ -1,11 +1,12 @@
-// ===============================================================================
-// Update/Add any #define values to match your build and board type if not using D1 Mini
-// =================================================================
-
+/* =====================================================================================
+   Update/Add any #define values to match your build and board type if not using D1 Mini
+   =====================================================================================
+   See the wiki for more information on these settings: https://github.com/Resinchem/TM1638-MQTT/wiki
+*/
 // pin definitions
-#define  STROBE_TM D5 // strobe = GPIO connected to strobe line of module
-#define  CLOCK_TM D6  // clock = GPIO connected to clock line of module
-#define  DIO_TM D7 // data = GPIO connected to data line of module
+#define  STROBE_TM D5         // strobe = GPIO connected to strobe line of module
+#define  CLOCK_TM D6          // clock = GPIO connected to clock line of module
+#define  DIO_TM D7            // data = GPIO connected to data line of module
 
 // WIFI MODE must be 2 and MQTTMODE must be 1 for this application to provide MQTT functionality
 #define WIFIMODE 2                            // 0 = Only Soft Access Point, 1 = Only connect to local WiFi network with UN/PW, 2 = Both
@@ -29,7 +30,8 @@ uint16_t ota_boot_time_window = 2500;    // minimum time on boot for IP address 
 uint16_t ota_time_window = 20000;        // time to start file upload when ota_flag set to true (after initial boot), in millsecs
 
 // Other options
-bool high_freq = true;                  //If using a high freq CPU > ~100 MHZ set to true (e.g ESP8266, ESP32). 
-uint8_t default_brightness = 5;         //default brightness at boot.  Valid values are 0-7.
-byte displayMode = 1;                   //default mode at boot. 0 = none/updates via MQTT, 1 = clock, 2 = date // Add your own after this
-bool showAlerts = false;                //Show alerts (flash LEDs)
+bool high_freq = true;                  // If using a high freq CPU > ~100 MHZ set to true (e.g ESP8266, ESP32). 
+uint8_t default_brightness = 5;         // default brightness at boot.  Valid values are 0-7.
+byte displayMode = 1;                   // default mode at boot. 0 = none/updates via MQTT, 1 = clock, 2 = date // Add your own after this
+bool showAlerts = false;                // Show alerts (flash LEDs) - reserved for future use
+uint16_t blinkInterval = 1000;          // Sets interval speed for blinking LEDs, in milliseconds
