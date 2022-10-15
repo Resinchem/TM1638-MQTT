@@ -15,4 +15,4 @@ While designed primarily for use with Home Assistant as an alternative to ESPHom
 
 #### This is still very much a work in progress!  There may be frequent updates, depending upon interest and support.
 
-### PLEASE SEE THE [WIKI](https://github.com/Resinchem/TM1638-MQTT/wiki) FOR INSTALLATION, CONFIGURATION AND OTHER IMPORTANT LIMITATIONS AND OTHER INFORMATION
+### PLEASE SEE THE [WIKI](https://github.com/Resinchem/TM1638-MQTT/wiki) FOR INSTALLATION, CONFIGURATION AND OTHER IMPORTANT INFORMATION AND LIMITATIONS.
