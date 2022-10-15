@@ -65,3 +65,7 @@
       data:
         topic: "cmnd/tm1638/setleds"
         payload: "00110010"  #This would turn on LEDs 3, 4 and 7.  All other LEDs would be turned off.
+
+# Blinking LEDS
+# To blink certain LEDS, use the same example as above, except use an MQTT Topic of "cmnd/tm1638/blinkleds"
+# Using the same payload as above, this would cause LEDs 3, 4 and 7 to blink.  Speed/blink interval is set in the Settings.h file.
