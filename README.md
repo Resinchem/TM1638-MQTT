@@ -11,7 +11,7 @@ In addition to providing MQTT wrapper functions, the framework also provides the
 While designed primarily for use with Home Assistant as an alternative to ESPHome, it should function with any MQTT broker or application.  For information on wiring and more, please see the following:
 
 * YouTube: [TM1638 with ESPHome and MQTT for Home Assistant](https://youtu.be/OtVdY95vwDY)
-* Written Blog: [TM1638 7-Segment Display with ESPHome](https://resinchemtech.blogspot.com/2022/10/tm1638.html)
+* Written Blog: [TM1638 7-Segment Display with ESPHome or MQTT](https://resinchemtech.blogspot.com/2022/10/tm1638.html)
 
 #### This is still very much a work in progress!  There may be frequent updates, depending upon interest and support.
 
